@@ -1,0 +1,28 @@
+# """ Time update """
+
+    # # State Extrapolation
+    # State.vel += State.acc * dt
+    # State.dis += State.vel * dt + State.acc * (0.5 * (dt ** 2))
+
+    # # Covariance Extrapolation
+    # State.p_acc += State.q
+    # State.p_vel += State.p_acc * dt + State.q
+    # State.p_dis += State.p_vel * dt + State.p_acc * (0.5 * (dt ** 2)) 
+    
+
+    # """ Measurement update """
+
+    # # Kalman Gain
+    # State.k_acc = State.p_acc / (State.p_acc + State.r)
+    # State.k_vel = State.p_vel / (State.p_vel + State.r)
+    # State.k_dis = State.p_dis / (State.p_dis + State.r)
+
+    # # State update equation
+    # State.acc += State.k_acc * (x - State.acc)
+    # State.vel += State.k_vel * (x - State.acc) * dt
+    # State.dis += State.k_dis * (x - State.acc) * (0.5 * (dt ** 2))
+
+    # # Covariance update equation
+    # State.p_acc = (1 - State.k_acc) * State.p_acc
+    # State.p_vel = (1 - State.k_vel) * State.p_vel
+    # State.p_dis = (1 - State.k_dis) * State.p_dis
