@@ -122,21 +122,27 @@ def move(x, y, z, timestamp):
     # Timestamp Update
     State.t = timestamp
 
-    State.vel = State.veli + (fil_x * dt)
+    State.vel = State.veli + (State.acc * dt)
+
+    if abs(State.vel) > 0.01:
+        State.dis += (State.vel * dt)
+
+    if abs(State.dis) < (0.75 * (10**(-2))) and State.dis == State.disi:
+        State.dis = 0   
 
 
-    dis = State.veli * dt + (0.5 * fil_x * (dt ** 2))
+    # dis = State.veli * dt + (0.5 * fil_x * (dt ** 2))
     
-    if abs(State.vel) < 0.07:
-        dis = 0
+    # if abs(State.vel) < 0.07:
+    #     dis = 0
 
-    if dis != State.disi:
-        State.dis += dis
+    # if dis != State.disi:
+    #     State.dis += dis
 
-    if State.dis == State.disinit:
-        State.dis = 0
-    State.disi = dis
-    State.disinit = State.dis    
+    # if State.dis == State.disinit:
+    #     State.dis = 0
+    # State.disi = dis
+    # State.disinit = State.dis    
     # if abs(dis) > (2 * (10 ** (-6))): 
     #     State.dis += dis
 
@@ -147,20 +153,20 @@ def move(x, y, z, timestamp):
     # print(round(State.dis * 100, 4))
     # print(State.dis)
     # try:
-    #     if(State.dis != State.disi):
-    #         pg.moveRel((State.dis * (10 ** 5)), 0)
-    #     else:
-    #         State.dis = 0    
+    #     # if(State.dis != State.disi):
+    #     #     pg.moveRel((State.dis * (10 ** 5)), 0)
+    #     # else:
+    #     #     State.dis = 0
 
-    #     # pg.moveRel(S, 0)   
+    #     pg.moveRel(State.dis * (10**3), 0)  
     # except Exception as e:
     #     print('Error pg move', e)
-    # State.disi = State.dis  
+    State.disi = State.dis
     State.veli = State.vel
     
     with open('readings.csv', 'a', newline='') as readings:
         writer = csv.DictWriter(readings, fieldnames=['kal_x', 'vel_x', 'dis_x'])
-        writer.writerow({'kal_x':fil_x, 'vel_x': State.vel, 'dis_x': State.dis})
+        writer.writerow({'kal_x':State.acc, 'vel_x': State.vel, 'dis_x': State.dis})
     print("Read")
 
 @socket.on('connect', namespace='/')
